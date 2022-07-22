@@ -12,8 +12,16 @@ const getAllCards = (req, res, next) => {
 
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
-  Card.create({ name, link, owner: req.user._id }).then((card) => {
-    res.send({ card });
+  const owner = req.user._id;
+  Card.create({ name, link, owner }).then((card) => {
+    res.send({
+      name: card.name,
+      link: card.link,
+      owner: card.owner,
+      likes: card.likes,
+      _id: card._id,
+      createdAt: card.createdAt,
+    });
   }).catch((err) => {
     if (err.name === 'ValidationError' || err.name === 'CastError') {
       next(new BadRequestError('Переданы некорректные данные при создании карточки. Заполните поля'));

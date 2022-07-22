@@ -38,14 +38,44 @@ function App() {
 
   const history = useHistory();
 
-  useEffect(() => {
+  //первоначальный вариант
+  /*useEffect(() => {
     if (loggedIn) {
     Promise.all([api.getProfile(), api.getInitialCards()])
       .then(([userData, card]) => {
         setCurrentUser(userData);
         setCards(card);
-      }).catch((err) => console.log(err))
-    }},[loggedIn]);
+      }).catch((err) => console.log(err));
+    }},[loggedIn]);*/
+
+  //так стало
+   useEffect(() => {
+    if (loggedIn) {
+      api.getProfile()
+      /*.then((userData) => {
+      //const myUser = userData.user;
+      //setCurrentUser(myUser)
+      console.log(userData)
+      setCurrentUser(userData.user)
+      })*/
+      .then((userData) => {
+        const myUser = userData.user;
+        setCurrentUser({
+          ...currentUser,
+          name: myUser.name,
+          about: myUser.about,
+          avatar: myUser.avatar,
+          id: myUser._id,
+        });
+      }).catch((err) => console.log(`Ошибка...: ${err}`));
+    }
+
+    api.getInitialCards()
+      .then((card) => {
+        setCards(card)
+      }).catch((err) => console.log(`Ошибка...: ${err}`));
+      history.push("/");
+    }, [loggedIn]);
 
   function handleEditAvatarClick () {
     setIsEditAvatarPopupOpen(true)
@@ -78,12 +108,14 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
     api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+      console.log(card._id)
       setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
   })}
 
   function handleUpdateUser({name,about}) {
     api.editProfile(name,about)
     .then((res) => {
+      console.log('res', res)
       setCurrentUser(res);
       closeAllPopups()})
     .catch((err) => console.log(err))}
@@ -98,6 +130,7 @@ function App() {
   function handleUpdateAvatar({avatar}) {
     api.editAvatar(avatar)
     .then((res) => {
+      console.log(res)
       setCurrentUser(res);
       closeAllPopups()})
     .catch((err) => console.log(err))}
@@ -124,7 +157,8 @@ function App() {
       })
     }
 
-  const handleLogin = ({email, password}) => {
+  //первоначальный вариант
+  /*const handleLogin = ({email, password}) => {
     return MestoAuth.authorize(email, password).then((res) => {
       if (res.token) {
         localStorage.setItem('token', res.token);
@@ -136,28 +170,76 @@ function App() {
         setisEntranceCompleted(false);
         setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.')
       })
-    }
+    }*/
 
-  const tokenCheck = () => {
+   //так стало
+    const handleLogin = ({email, password}) => {
+      return MestoAuth.authorize(email, password).then((res) => {
+        api.updateToken(res['token']);
+        setLoggedIn(true)
+        if (res['token']) {
+          localStorage.setItem('token', res['token']);
+          console.log(res['token'])
+          tokenCheck()
+        }}).catch((err) => {
+          console.log(err);
+          handleInfoTooltipPopupClick();
+          setisEntranceCompleted(false);
+          setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.')
+        })
+      }
+
+    //первоначальный вариант
+    /*const tokenCheck = () => {
     const token = localStorage.getItem('token')
     if(token) {
       MestoAuth.getContent(token).then((res) => {
-        setUserData(res.data.email)
-        setLoggedIn(true)
-        history.push('/')
+        //setUserData(res.data.email)
+        if(res) {
+          const userData = {
+            id: res._id,
+            email: res.email,
+          }
+          setUserData(userData)
+          setLoggedIn(true)
+          history.push('/')
+        }
       })
       .catch((err) => {
         console.log(err);
       })
     }
-  }
+  } */
+
+  //так стало
+    const tokenCheck = () => {
+      if (localStorage.getItem('jwt')) {
+        const jwt = localStorage.getItem('jwt');
+        console.log(jwt)
+        MestoAuth.getContent(jwt)
+          .then((res) => {
+            console.log(res)
+            if (res) {
+              const userData = {
+                id: res._id,
+                email: res.email,
+              };
+              console.log(userData);
+              setLoggedIn(true);
+              setUserData(userData);
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+        }
+      };
 
   useEffect(() => {
     tokenCheck();
   }, []);
 
   const signOut = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem('jwt')
     setUserData('');
     setLoggedIn(false);
     history.push('/sign-in');
