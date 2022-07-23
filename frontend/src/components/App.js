@@ -178,8 +178,7 @@ function App() {
         api.updateToken(res['token']);
         setLoggedIn(true)
         if (res['token']) {
-          localStorage.setItem('token', res['token']);
-          console.log(res['token'])
+          localStorage.setItem("jwt", res['token']);
           tokenCheck()
         }}).catch((err) => {
           console.log(err);
@@ -190,43 +189,33 @@ function App() {
       }
 
     //первоначальный вариант
-    /*const tokenCheck = () => {
+    /*
+    const tokenCheck = () => {
     const token = localStorage.getItem('token')
     if(token) {
       MestoAuth.getContent(token).then((res) => {
-        //setUserData(res.data.email)
-        if(res) {
-          const userData = {
-            id: res._id,
-            email: res.email,
-          }
-          setUserData(userData)
-          setLoggedIn(true)
-          history.push('/')
-        }
+        setUserData(res.data.email)
+        setLoggedIn(true)
+        history.push('/')
       })
       .catch((err) => {
         console.log(err);
       })
     }
-  } */
+  }*/
 
   //так стало
     const tokenCheck = () => {
-      if (localStorage.getItem('jwt')) {
-        const jwt = localStorage.getItem('jwt');
+      const jwt = localStorage.getItem('jwt');
+      if (jwt) {
         console.log(jwt)
         MestoAuth.getContent(jwt)
           .then((res) => {
             console.log(res)
             if (res) {
-              const userData = {
-                id: res._id,
-                email: res.email,
-              };
-              console.log(userData);
+              const userData = res.user;
               setLoggedIn(true);
-              setUserData(userData);
+              setUserData(userData.email);
             }
           }).catch((err) => {
             console.log(err);

@@ -20,9 +20,6 @@ function Card ({card,onCardClick,onCardLike,onCardDelete}) {
   // Определяем, являемся ли мы владельцем текущей карточки
   const isOwn = card.owner === currentUser.id;
 
-  console.log(card.owner)
-  console.log(currentUser)
-
   // Создаём переменную, которую после зададим в `className` для кнопки удаления
   const cardDeleteButtonClassName = (
   `card__delete-button ${isOwn ? 'card__delete-button_active' : ''}`);
