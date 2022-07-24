@@ -178,8 +178,8 @@ class Api {
     .catch(console.log)
   }
 
-  addLike(cardId) {
-    return fetch(this._options.baseUrl + "/cards/" + cardId + "/likes", {
+  addLike(_id) {
+    return fetch(this._options.baseUrl + "/cards/" + _id + "/likes", {
       method: "PUT",
       headers: this._options.headers,
       credentials: 'include',
@@ -187,17 +187,13 @@ class Api {
     .catch(console.log)
   }
 
-  deleteLike(cardId) {
-    return fetch(this._options.baseUrl + "/cards/" + cardId + "/likes", {
+  deleteLike(_id) {
+    return fetch(this._options.baseUrl + "/cards/" + _id + "/likes", {
       method: "DELETE",
       headers: this._options.headers,
       credentials: 'include',
     }).then(this._checkResponse)
     .catch(console.log)
-  }
-
-  changeLikeCardStatus(cardId, isLiked) {
-    return isLiked ? this.addLike(cardId) : this.deleteLike(cardId);
   }
 
   addImage(name,link) {

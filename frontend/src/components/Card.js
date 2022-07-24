@@ -7,25 +7,25 @@ function Card ({card,onCardClick,onCardLike,onCardDelete}) {
 
   function handleClick() {
     onCardClick(card);
-  }
+  };
 
   function handleLikeClick() {
     onCardLike(card);
-  }
+  };
 
   function handleDeleteClick () {
-    onCardDelete(card)
-  }
+    onCardDelete(card);
+  };
 
-  // Определяем, являемся ли мы владельцем текущей карточки
-  const isOwn = card.owner === currentUser.id;
+   // Определяем, являемся ли мы владельцем текущей карточки
+   const isOwn = card.owner === currentUser.id;
 
-  // Создаём переменную, которую после зададим в `className` для кнопки удаления
-  const cardDeleteButtonClassName = (
-  `card__delete-button ${isOwn ? 'card__delete-button_active' : ''}`);
+   // Создаём переменную, которую после зададим в `className` для кнопки удаления
+   const cardDeleteButtonClassName = (
+   `card__delete-button ${isOwn ? 'card__delete-button_active' : ''}`);
 
-  // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  const isLiked = card.likes.some(i => i._id === currentUser._id);
+   // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
+   const isLiked = card.likes.some(i => i === currentUser.id);
 
   // Создаём переменную, которую после зададим в `className` для кнопки лайка
   const cardLikeButtonClassName = `card__like ${isLiked ? "card__like_active" : ''}`;

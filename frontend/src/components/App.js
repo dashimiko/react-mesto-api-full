@@ -1,8 +1,8 @@
 import {useState,useEffect} from 'react';
 import {Route, Switch, Redirect, Link, useHistory} from 'react-router-dom';
 
-import {api} from '../utils/Api'
-import * as MestoAuth from '../utils/MestoAuth'
+import {api} from '../utils/Api';
+import * as MestoAuth from '../utils/MestoAuth';
 
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
@@ -31,7 +31,7 @@ function App() {
 
   const [selectedCard, setSelectedCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  //const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setisLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
   const [userData, setUserData] = useState('');
   const [InfoTooltipText, setInfoTooltipText] = useState('');
@@ -39,21 +39,10 @@ function App() {
 
   const history = useHistory();
 
-  //первоначальный вариант
-  /*useEffect(() => {
+  useEffect(() => {
     if (loggedIn) {
-    Promise.all([api.getProfile(), api.getInitialCards()])
+      Promise.all([api.getProfile(), api.getInitialCards()])
       .then(([userData, card]) => {
-        setCurrentUser(userData);
-        setCards(card);
-      }).catch((err) => console.log(err));
-    }},[loggedIn]);*/
-
-   //так стало
-   /*useEffect(() => {
-    if (loggedIn) {
-      api.getProfile()
-      .then((userData) => {
         const myUser = userData.user;
         setCurrentUser({
           ...currentUser,
@@ -62,196 +51,142 @@ function App() {
           avatar: myUser.avatar,
           id: myUser._id,
         });
-      }).catch((err) => console.log(`Ошибка...: ${err}`));
-    }
-
-    api.getInitialCards()
-      /*.then((card) => {
-        setCards(card)
-      })*/
-      /*.then(card => {
         setCards(card.map(i => i).reverse());
       }).catch((err) => console.log(err));
-      history.push("/");
-    },[loggedIn]);*/
-
-    useEffect(() => {
-      if (loggedIn) {
-      Promise.all([api.getProfile(), api.getInitialCards()])
-        .then(([userData, card]) => {
-          const myUser = userData.user;
-        setCurrentUser({
-          ...currentUser,
-          name: myUser.name,
-          about: myUser.about,
-          avatar: myUser.avatar,
-          id: myUser._id,
-        });
-        setCards(card.map(i => i).reverse());
-        }).catch((err) => console.log(err));
-      }},[loggedIn]);
+    }},[loggedIn]);
 
   function handleEditAvatarClick () {
-    setIsEditAvatarPopupOpen(true)
-  }
+    setIsEditAvatarPopupOpen(true);
+  };
 
   function handleEditProfileClick () {
     setIsEditProfilePopupOpen(true);
-  }
+  };
 
   function handleInfoTooltipPopupClick () {
-    setIsInfoTooltipPopupOpen(true)
-  }
+    setIsInfoTooltipPopupOpen(true);
+  };
 
   function handleAddPlaceClick () {
-    setIsAddPlacePopupOpen(true)
-  }
+    setIsAddPlacePopupOpen(true);
+  };
 
   function handleCardClick (card) {
-    setSelectedCard(card)
-  }
+    setSelectedCard(card);
+  };
 
   function closeAllPopups () {
     setIsEditProfilePopupOpen(null);
     setIsAddPlacePopupOpen(null);
     setIsEditAvatarPopupOpen(null);
-    setIsInfoTooltipPopupOpen(null)
-    setSelectedCard(null)
+    setIsInfoTooltipPopupOpen(null);
+    setSelectedCard(null);
   }
 
   function handleUpdateUser({name,about}) {
     api.editProfile(name,about)
     .then((res) => {
-      console.log('res', res)
       setCurrentUser(res);
-      closeAllPopups()})
-    .catch((err) => console.log(err))}
+      closeAllPopups();
+    })
+    .catch((err) => console.log(err))};
 
   function handleAddPlaceSubmit({name, link}) {
     api.addImage(name, link)
     .then(newCard => {
       setCards([newCard, ...cards]);
-      closeAllPopups()})
-    .catch((err) => console.log(err))}
+      closeAllPopups();
+    })
+    .catch((err) => console.log(err))};
 
   function handleUpdateAvatar({avatar}) {
     api.editAvatar(avatar)
     .then((res) => {
       console.log(res)
       setCurrentUser(res);
-      closeAllPopups()})
-    .catch((err) => console.log(err))}
+      closeAllPopups();
+    })
+    .catch((err) => console.log(err))};
 
   function handleCardDelete(card) {
     api.deleteCard(card._id)
     .then(() => {setCards((state) => state.filter((с) => с._id !== card._id))})
-    .catch((err) => console.log(err))}
+    .catch((err) => console.log(err))};
 
   const handleRegister = ({email, password}) => {
-    return MestoAuth.register(email, password)
-      .then((res) => {
-        if (res) {
-          handleInfoTooltipPopupClick();
-          history.push("/sign-in");
-          setisEntranceCompleted(true);
-          setInfoTooltipText('Вы успешно зарегистрировались!')
-        }})
-      .catch((err) => {
-        console.log(err);
+    return MestoAuth.register(email, password).then((res) => {
+      if (res) {
         handleInfoTooltipPopupClick();
-        setisEntranceCompleted(false);
-        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.')
-      })
-    }
-
-  //первоначальный вариант
-  /*const handleLogin = ({email, password}) => {
-    return MestoAuth.authorize(email, password).then((res) => {
-      if (res.token) {
-        localStorage.setItem('token', res.token);
-        tokenCheck()
+        history.push("/sign-in");
+        setisEntranceCompleted(true);
+        setInfoTooltipText('Вы успешно зарегистрировались!');
       }})
       .catch((err) => {
         console.log(err);
         handleInfoTooltipPopupClick();
         setisEntranceCompleted(false);
-        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.')
+        setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
       })
-    }*/
+    };
 
-   //так стало
-    const handleLogin = ({email, password}) => {
-      return MestoAuth.authorize(email, password).then((res) => {
-        api.updateToken(res['token']);
-        setLoggedIn(true)
-        if (res['token']) {
-          localStorage.setItem("jwt", res['token']);
-          tokenCheck()
-        }}).catch((err) => {
+  const handleLogin = ({email, password}) => {
+    return MestoAuth.authorize(email, password).then((res) => {
+      api.updateToken(res['token']);
+      setLoggedIn(true);
+      if (res['token']) {
+        localStorage.setItem("jwt", res['token']);
+        tokenCheck();
+      }}).catch((err) => {
           console.log(err);
           handleInfoTooltipPopupClick();
           setisEntranceCompleted(false);
-          setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.')
+          setInfoTooltipText('Что-то пошло не так! Попробуйте ещё раз.');
         })
-      }
+    };
 
-    //первоначальный вариант
-    /*
-    const tokenCheck = () => {
-    const token = localStorage.getItem('token')
-    if(token) {
-      MestoAuth.getContent(token).then((res) => {
-        setUserData(res.data.email)
-        setLoggedIn(true)
-        history.push('/')
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    }
-  }*/
-
-  //так стало
-    const tokenCheck = () => {
-      const jwt = localStorage.getItem('jwt');
+  const tokenCheck = () => {
+    const jwt = localStorage.getItem('jwt');
       if (jwt) {
-        console.log(jwt)
-        MestoAuth.getContent(jwt)
-          .then((res) => {
-            console.log(res)
-            if (res) {
-              const userData = res.user;
-              setUserData(userData.email);
-              setLoggedIn(true);
-              //setisLoading(false)
-              history.push("/");
-            }
-          }).catch((err) => {
+        MestoAuth.getContent(jwt).then((res) => {
+          if (res) {
+            const userData = res.user;
+            setUserData(userData.email);
+            setLoggedIn(true);
+            setisLoading(false);
+            history.push("/");
+          }}).catch((err) => {
             console.log(err);
           });
+        } else {
+          setisLoading(false);
         }
-      };
+    };
 
-    function handleCardLike(card) {
-      const isLiked = card.likes.some((user) => user.id === currentUser._id);
-      api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-        console.log(card._id, currentUser.id )
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-      })}
-
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(like => like === currentUser.id);
+    if(!isLiked) {
+      api.addLike(card._id).then((res) => {
+        setCards((state) => state.map((c) => c._id === card._id ? res : c));
+      })
+    } else {
+      api.deleteLike(card._id).then((res) => {
+        setCards((state) => state.map((c) => c._id === card._id ? res : c));
+      })
+    }
+  };
 
   useEffect(() => {
     tokenCheck();
   }, []);
 
   const signOut = () => {
-    localStorage.removeItem('jwt')
+    localStorage.removeItem('jwt');
     setUserData('');
     setLoggedIn(false);
     history.push('/sign-in');
   };
 
-  //if (isLoading) return null;
+  if (isLoading) return null;
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

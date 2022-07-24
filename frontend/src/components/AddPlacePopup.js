@@ -16,12 +16,12 @@ function AddPlacePopup({isOpen, onClose, onAddCard}) {
 
   const handleNameInput = (e) => {
     e.preventDefault();
-    setName(e.target.value)
+    setName(e.target.value);
   }
 
   const handleLinkInput = (e) => {
     e.preventDefault();
-    setLink(e.target.value)
+    setLink(e.target.value);
   }
 
   useEffect(() => {
