@@ -48,16 +48,10 @@ function App() {
       }).catch((err) => console.log(err));
     }},[loggedIn]);*/
 
-  //так стало
+   //так стало
    useEffect(() => {
     if (loggedIn) {
       api.getProfile()
-      /*.then((userData) => {
-      //const myUser = userData.user;
-      //setCurrentUser(myUser)
-      console.log(userData)
-      setCurrentUser(userData.user)
-      })*/
       .then((userData) => {
         const myUser = userData.user;
         setCurrentUser({
@@ -73,7 +67,7 @@ function App() {
     api.getInitialCards()
       .then((card) => {
         setCards(card)
-      }).catch((err) => console.log(`Ошибка...: ${err}`));
+      }).catch((err) => console.log(err));
       history.push("/");
     }, [loggedIn]);
 
@@ -104,13 +98,6 @@ function App() {
     setIsInfoTooltipPopupOpen(null)
     setSelectedCard(null)
   }
-
-  function handleCardLike(card) {
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      console.log(card._id)
-      setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-  })}
 
   function handleUpdateUser({name,about}) {
     api.editProfile(name,about)
@@ -214,14 +201,23 @@ function App() {
             console.log(res)
             if (res) {
               const userData = res.user;
-              setLoggedIn(true);
               setUserData(userData.email);
+              setLoggedIn(true);
+              history.push("/");
             }
           }).catch((err) => {
             console.log(err);
           });
         }
       };
+
+    function handleCardLike(card) {
+      const isLiked = card.likes.some((user) => user._id === currentUser._id);
+      api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+        console.log(card._id, currentUser.id )
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+      })}
+
 
   useEffect(() => {
     tokenCheck();

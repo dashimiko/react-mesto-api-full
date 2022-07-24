@@ -141,14 +141,16 @@ class Api {
     return fetch(this._options.baseUrl + "/cards", {
       headers: this._options.headers,
       credentials: 'include',
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse).catch(console.log)
+    //.then((res) => res)
   }
 
   getProfile() {
     return fetch(this._options.baseUrl + "/users/me", {
       headers: this._options.headers,
       credentials: 'include',
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse).catch(console.log)
+    //.then((res) => res)
   }
 
   editProfile(name,about) {
@@ -160,7 +162,7 @@ class Api {
         name,
         about
       })
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -172,7 +174,7 @@ class Api {
       body: JSON.stringify({
         avatar,
       })
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -181,7 +183,7 @@ class Api {
       method: "PUT",
       headers: this._options.headers,
       credentials: 'include',
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -190,7 +192,7 @@ class Api {
       method: "DELETE",
       headers: this._options.headers,
       credentials: 'include',
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -207,7 +209,7 @@ class Api {
         name,
         link
       })
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -216,7 +218,7 @@ class Api {
       method: "DELETE",
       headers: this._options.headers,
       credentials: 'include',
-    }).then(this._checkResponse).then((res) => res)
+    }).then(this._checkResponse)
     .catch(console.log)
   }
 
@@ -229,7 +231,8 @@ const token = localStorage.getItem('jwt');
 
 export const api = new Api({
   //здесь потом будет url из .env
-  baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
+  //baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
+  baseUrl: 'http://localhost:3001',
   headers: {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
