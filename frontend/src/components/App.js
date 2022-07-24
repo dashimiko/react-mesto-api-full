@@ -31,6 +31,7 @@ function App() {
 
   const [selectedCard, setSelectedCard] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  //const [isLoading, setisLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
   const [userData, setUserData] = useState('');
   const [InfoTooltipText, setInfoTooltipText] = useState('');
@@ -49,7 +50,7 @@ function App() {
     }},[loggedIn]);*/
 
    //так стало
-   useEffect(() => {
+   /*useEffect(() => {
     if (loggedIn) {
       api.getProfile()
       .then((userData) => {
@@ -65,11 +66,30 @@ function App() {
     }
 
     api.getInitialCards()
-      .then((card) => {
+      /*.then((card) => {
         setCards(card)
+      })*/
+      /*.then(card => {
+        setCards(card.map(i => i).reverse());
       }).catch((err) => console.log(err));
       history.push("/");
-    }, [loggedIn]);
+    },[loggedIn]);*/
+
+    useEffect(() => {
+      if (loggedIn) {
+      Promise.all([api.getProfile(), api.getInitialCards()])
+        .then(([userData, card]) => {
+          const myUser = userData.user;
+        setCurrentUser({
+          ...currentUser,
+          name: myUser.name,
+          about: myUser.about,
+          avatar: myUser.avatar,
+          id: myUser._id,
+        });
+        setCards(card.map(i => i).reverse());
+        }).catch((err) => console.log(err));
+      }},[loggedIn]);
 
   function handleEditAvatarClick () {
     setIsEditAvatarPopupOpen(true)
@@ -203,6 +223,7 @@ function App() {
               const userData = res.user;
               setUserData(userData.email);
               setLoggedIn(true);
+              //setisLoading(false)
               history.push("/");
             }
           }).catch((err) => {
@@ -230,6 +251,8 @@ function App() {
     history.push('/sign-in');
   };
 
+  //if (isLoading) return null;
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -250,10 +273,10 @@ function App() {
       </Route>
 
       <ProtectedRoute exact path="/" loggedIn={loggedIn}>
-        <Header onClick={signOut} userData={userData}>
+        <Header userData={userData}>
           <div className ="header__user-container">
             <p className ="header__link header__email">{userData}</p>
-            <Link to="/sign-in" className ="header__link">Выйти</Link>
+            <Link onClick={signOut} to="/sign-in" className ="header__link">Выйти</Link>
           </div>
         </Header>
         <Main
