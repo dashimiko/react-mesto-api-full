@@ -226,9 +226,7 @@ class Api {
 const token = localStorage.getItem('jwt');
 
 export const api = new Api({
-  //здесь потом будет url из .env
-  //baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
-  baseUrl: 'http://localhost:3001',
+  baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
   headers: {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",

@@ -29,8 +29,16 @@ app.use(cors({
 }));
 
 app.use(requestLogger);
-
 app.use(express.json());
+
+/*
+удалить после ревью
+*/
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
