@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 const { superSecret } = require('../utils/jwt');
 
 const NotFoundError = require('../errors/notFoundError');
