@@ -1,5 +1,7 @@
 {"extends": "airbnb-base",
   "rules": {
+     // suppress errors for missing 'import React' in files
+   "react/react-in-jsx-scope": "off",
     "no-underscore-dangle": [
       "error",
       {"allow": ["_id"]}
