@@ -6,8 +6,6 @@ const NotFoundError = require('../errors/notFoundError');
 const BadRequestError = require('../errors/badRequestError');
 const ConflictError = require('../errors/conflictError');
 
-{ secret } = require('../utils/jwt');
-
 const getAllUser = (req, res, next) => {
   User.find({}).then((users) => {
     res.send(users);
