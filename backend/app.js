@@ -9,7 +9,6 @@ const {
   createUser,
 } = require('./controllers/users');
 
-const { allowedCors } = require('./utils/corsData');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { userAuthorization } = require('./middlewares/auth');
@@ -24,7 +23,17 @@ const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use('*', cors(allowedCors));
+const options = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://myprojectmesto.students.nomoredomains.xyz',
+    'http://myprojectmesto.students.nomoredomains.xyz',
+  ],
+  credentials: true,
+};
+
+app.use('*', cors(options));
 
 app.use(requestLogger);
 app.use(express.json());
