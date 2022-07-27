@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React,{ useContext } from 'react';
 import profileAddButton from '../images/small_add_button.svg';
 import Card from './Card';
 
