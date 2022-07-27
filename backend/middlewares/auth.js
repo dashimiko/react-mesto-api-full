@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const AuthorizationError = require('../errors/authorizationError');
-const { superSecret } = require('../utils/jwt');
+const { SuperSecret } = require('../utils/jwt');
 
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
@@ -12,7 +12,7 @@ const userAuthorization = (req, res, next) => {
   const token = extractBearerToken(authorization);
   let payload;
   try {
-    payload = jwt.verify(token, superSecret);
+    payload = jwt.verify(token, SuperSecret);
   } catch (err) {
     throw new AuthorizationError('Необходима авторизация');
   }
