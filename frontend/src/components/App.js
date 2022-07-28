@@ -86,7 +86,11 @@ function App() {
   function handleUpdateUser({name,about}) {
     api.editProfile(name,about)
     .then((res) => {
-      setCurrentUser(res);
+      setCurrentUser({
+        ...currentUser,
+        name: res.name,
+        about: res.about,
+      });
       closeAllPopups();
     })
     .catch((err) => console.log(err))};
@@ -99,14 +103,16 @@ function App() {
     })
     .catch((err) => console.log(err))};
 
-  function handleUpdateAvatar({avatar}) {
-    api.editAvatar(avatar)
-    .then((res) => {
-      console.log(res)
-      setCurrentUser(res);
-      closeAllPopups();
-    })
-    .catch((err) => console.log(err))};
+    function handleUpdateAvatar({avatar}) {
+      api.editAvatar(avatar)
+      .then((res) => {
+        setCurrentUser({
+          ...currentUser,
+          avatar: res.avatar,
+        });
+        closeAllPopups();
+      })
+      .catch((err) => console.log(err))};
 
   function handleCardDelete(card) {
     api.deleteCard(card._id)
