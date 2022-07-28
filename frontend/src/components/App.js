@@ -201,14 +201,14 @@ function App() {
 
       <Route path="/sign-in">
         <Header>
-          <Link to="/sign-up" className ="header__link">Регистрация</Link>
+          <Link to="/sign-up" className ="header__link header__link_margin">Регистрация</Link>
         </Header>
         <Login handleLogin={handleLogin} tokenCheck={tokenCheck}/>
       </Route>
 
       <Route path="/sign-up">
         <Header>
-          <Link to="/sign-in" className ="header__link">Войти</Link>
+          <Link to="/sign-in" className ="header__link header__link_margin">Войти</Link>
         </Header>
         <Register handleRegister={handleRegister} />
       </Route>
