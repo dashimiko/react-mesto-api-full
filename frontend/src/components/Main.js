@@ -1,7 +1,6 @@
 import React,{ useContext } from 'react';
 import profileAddButton from '../images/small_add_button.svg';
 import Card from './Card';
-
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
 function Main({cards,onEditProfile,onAddPlace,onEditAvatar,onCardClick,onCardLike,onCardDelete}){
